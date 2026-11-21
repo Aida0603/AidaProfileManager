@@ -1,0 +1,26 @@
+@model AidaProfileManager.ViewModels.ProfileCreateViewModel
+@{
+    ViewData["Title"] = "Валидация нұсқаулығы";
+    var passed = ViewBag.ValidationPassed as bool? == true;
+}
+<section class="page-heading-row guide-page-heading"><div><div class="eyebrow">ЗЕРТТЕП КӨРІҢІЗ</div><h1>Валидация нұсқаулығы</h1><p class="page-lead">Енгізу ережелерінің браузер мен серверде қалай жұмыс істейтінін көріңіз.</p></div></section>
+<div class="guide-content-grid">
+    <section class="panel validation-playground">
+        <div class="panel-heading"><div><span class="section-kicker">PLAYGROUND</span><h2>Тексеру пішіні</h2><p>Бұл беттегі дерек сақталмайды.</p></div><span class="detail-panel-icon pink-icon">@await Html.PartialAsync("_Icon", "sparkle")</span></div>
+        @if (passed) { <div class="validation-success" role="status">@await Html.PartialAsync("_Icon", "check-circle") Барлық тексерістен өтті. Енгізілген дерек сақталған жоқ.</div> }
+        <form asp-action="ValidationGuide" method="post" novalidate>
+            <partial name="_ProfileCreateFields" model="Model" />
+            <div class="form-actions"><button class="btn btn-primary-soft" type="submit" data-loading-button>@await Html.PartialAsync("_Icon", "shield-check") Тексеріп көру</button></div>
+        </form>
+    </section>
+    <aside class="panel learning-panel"><span class="section-kicker">ҚЫСҚАША ТҮСІНІК</span><h2>Бұл тексерістер не істейді?</h2>
+        <div class="learning-item"><span class="learning-number">01</span><div><strong>Data Annotations</strong><p><code>[Required]</code>, <code>[StringLength]</code>, <code>[Range]</code>, <code>[EmailAddress]</code>, <code>[Compare]</code> және <code>[RegularExpression]</code> бір өрістің мәнін тексереді.</p></div></div>
+        <div class="learning-item"><span class="learning-number">02</span><div><strong>ModelState.IsValid</strong><p>Контроллер деректі сақтауға дейін барлық серверлік қате жоқ екенін тексереді.</p></div></div>
+        <div class="learning-item"><span class="learning-number">03</span><div><strong>ModelState.AddModelError</strong><p>Username немесе email қайталанса, контроллер қатені тиісті өріске тіркейді.</p></div></div>
+        <div class="learning-item"><span class="learning-number">04</span><div><strong>IValidatableObject</strong><p>18-ге толмаған пайдаланушының Bio өрісінде кемінде 20 таңба болуын тексереді.</p></div></div>
+        <div class="learning-item"><span class="learning-number">05</span><div><strong>Custom Validation Attribute</strong><p><code>StrongPasswordAttribute</code> құпиясөздегі бас/кіші әріп, сан және арнайы белгіні тексереді.</p></div></div>
+        <div class="learning-item"><span class="learning-number">06</span><div><strong>Client-side + Server-side</strong><p>jQuery Unobtrusive Validation жылдам жауап береді; сервер тексерісі браузер өшірілсе де орындалады.</p></div></div>
+        <div class="guide-note">@await Html.PartialAsync("_Icon", "info-circle") <span>Бұл оқу зертханасы. Профиль тек негізгі тіркеу пішіні арқылы сақталады.</span></div>
+    </aside>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

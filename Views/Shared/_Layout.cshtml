@@ -1,0 +1,93 @@
+@{
+    var pageTitle = ViewData["Title"]?.ToString() ?? "Басқару тақтасы";
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+<!DOCTYPE html>
+<html lang="kk" data-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f5fa" />
+    <title>@pageTitle · AidaProfileManager</title>
+    <script>
+        (() => {
+            try {
+                const theme = localStorage.getItem('aida-theme');
+                if (theme === 'dark') document.documentElement.dataset.theme = 'dark';
+            } catch { }
+        })();
+    </script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/bootstrap-icons.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="app-shell">
+        <div class="sidebar-scrim" data-sidebar-close></div>
+        <aside class="sidebar" id="app-sidebar">
+            <a class="brand" asp-controller="Home" asp-action="Index" aria-label="AidaProfileManager басты беті">
+                <span class="brand-mark">a</span>
+                <span class="brand-copy"><strong>aida</strong><small>profile manager</small></span>
+            </a>
+            <div class="workspace-label">ЖҰМЫС КЕҢІСТІГІ</div>
+            <nav class="side-nav" aria-label="Негізгі навигация">
+                <a class="side-link @(currentController == "Home" ? "active" : "")" asp-controller="Home" asp-action="Index">
+                    @await Html.PartialAsync("_Icon", "grid") <span>Басқару тақтасы</span>
+                </a>
+                <a class="side-link @(currentController == "Profiles" && currentAction is "Index" or "Details" or "Edit" or "Delete" or "Create" ? "active" : "")" asp-controller="Profiles" asp-action="Index">
+                    @await Html.PartialAsync("_Icon", "people") <span>Профильдер</span>
+                </a>
+                <a class="side-link @(currentController == "Profiles" && currentAction == "ValidationGuide" ? "active" : "")" asp-controller="Profiles" asp-action="ValidationGuide">
+                    @await Html.PartialAsync("_Icon", "shield-check") <span>Валидация нұсқаулығы</span>
+                </a>
+            </nav>
+            <div class="sidebar-bottom">
+                <div class="sidebar-note">
+                    <div class="note-orbit">✦</div>
+                    <strong>Реттелген деректер</strong>
+                    <span>Қауіпсіз сақталған профильдеріңіз бір жерде.</span>
+                </div>
+                <div class="sidebar-user">
+                    <div class="user-avatar">A</div>
+                    <div class="user-copy"><strong>Aida</strong><span>Жоба авторы</span></div>
+                    <span class="online-dot" aria-label="Белсенді"></span>
+                </div>
+            </div>
+        </aside>
+        <main class="main-area">
+            <header class="topbar">
+                <button class="icon-button mobile-menu" type="button" aria-label="Мәзірді ашу" aria-controls="app-sidebar" aria-expanded="false" data-sidebar-toggle>
+                    @await Html.PartialAsync("_Icon", "list")
+                </button>
+                <div class="breadcrumb-label"><span>Жұмыс кеңістігі</span><span class="crumb-separator">/</span><strong>@pageTitle</strong></div>
+                <div class="topbar-actions">
+                    <span class="today-label">@DateTime.Now.ToString("dd MMMM yyyy", System.Globalization.CultureInfo.GetCultureInfo("kk-KZ"))</span>
+                    <button class="icon-button theme-toggle" type="button" aria-label="Түсті режимді ауыстыру" title="Түсті режимді ауыстыру" data-theme-toggle>
+                        <span class="theme-sun">@await Html.PartialAsync("_Icon", "sun")</span>
+                        <span class="theme-moon">@await Html.PartialAsync("_Icon", "moon")</span>
+                    </button>
+                    <a class="topbar-avatar" asp-controller="Home" asp-action="Index" aria-label="Басты бет">A</a>
+                </div>
+            </header>
+            @if (TempData["Toast"] is string toast)
+            {
+                var kind = TempData["ToastKind"]?.ToString() ?? "success";
+                <div class="toast-message @kind" role="status" data-toast>
+                    <span class="toast-icon">@await Html.PartialAsync("_Icon", kind == "success" ? "check-circle" : "info-circle")</span>
+                    <span>@toast</span>
+                    <button class="toast-close" type="button" aria-label="Жабу" data-toast-close>×</button>
+                </div>
+            }
+            <div class="page-content">
+                @RenderBody()
+            </div>
+            <footer class="app-footer"><span>© 2026 AidaProfileManager</span><span>Ұқыпты жұмыс. Қауіпсіз деректер.</span></footer>
+        </main>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

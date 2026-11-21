@@ -1,0 +1,69 @@
+@model AidaProfileManager.ViewModels.ProfileCreateViewModel
+<div asp-validation-summary="All" class="validation-summary" role="alert"></div>
+<div class="form-section-title"><span class="form-section-number">01</span><div><h2>Негізгі ақпарат</h2><p>Профиль иесінің байланыс деректері</p></div></div>
+<div class="form-grid">
+    <div class="field-group field-wide">
+        <label asp-for="FullName" class="field-label"></label>
+        <input asp-for="FullName" class="form-control app-input" placeholder="Мысалы, Аида Нұрланқызы" autocomplete="name" />
+        <span asp-validation-for="FullName" class="field-error"></span>
+    </div>
+    <div class="field-group">
+        <label asp-for="Username" class="field-label"></label>
+        <div class="input-affix"><span class="input-prefix">@@</span><input asp-for="Username" class="form-control app-input" placeholder="aida.n" autocomplete="username" /></div>
+        <span asp-validation-for="Username" class="field-error"></span>
+        <small class="field-hint">3–30 таңба, латын әріптері мен сандар</small>
+    </div>
+    <div class="field-group">
+        <label asp-for="Email" class="field-label"></label>
+        <input asp-for="Email" class="form-control app-input" placeholder="aida@example.com" autocomplete="email" />
+        <span asp-validation-for="Email" class="field-error"></span>
+    </div>
+    <div class="field-group">
+        <label asp-for="Age" class="field-label"></label>
+        <div class="input-affix"><input asp-for="Age" class="form-control app-input" min="16" max="100" /><span class="input-suffix">жас</span></div>
+        <span asp-validation-for="Age" class="field-error"></span>
+    </div>
+    <div class="field-group">
+        <label asp-for="PhoneNumber" class="field-label"></label>
+        <input asp-for="PhoneNumber" class="form-control app-input" placeholder="+7 (700) 000-00-00" autocomplete="tel" />
+        <span asp-validation-for="PhoneNumber" class="field-error"></span>
+    </div>
+    <div class="field-group field-wide">
+        <label asp-for="Gender" class="field-label"></label>
+        <select asp-for="Gender" class="form-select app-input">
+            <option value="">Жынысын таңдаңыз</option>
+            <option value="Әйел">Әйел</option>
+            <option value="Ер">Ер</option>
+            <option value="Көрсеткім келмейді">Көрсеткім келмейді</option>
+        </select>
+        <span asp-validation-for="Gender" class="field-error"></span>
+    </div>
+</div>
+
+<div class="form-section-title section-spaced"><span class="form-section-number">02</span><div><h2>Қауіпсіздік</h2><p>Құпиясөзді басқа жерде қолданбаңыз</p></div></div>
+<div class="form-grid">
+    <div class="field-group">
+        <label asp-for="Password" class="field-label"></label>
+        <input asp-for="Password" class="form-control app-input" autocomplete="new-password" data-password-input />
+        <span asp-validation-for="Password" class="field-error"></span>
+        <div class="password-meter" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        <small class="field-hint">Бас және кіші әріп, сан мен арнайы белгі қосыңыз.</small>
+    </div>
+    <div class="field-group">
+        <label asp-for="ConfirmPassword" class="field-label"></label>
+        <input asp-for="ConfirmPassword" class="form-control app-input" autocomplete="new-password" />
+        <span asp-validation-for="ConfirmPassword" class="field-error"></span>
+    </div>
+    <div class="field-group field-wide">
+        <label asp-for="Bio" class="field-label"></label>
+        <textarea asp-for="Bio" class="form-control app-input" rows="4" placeholder="Қызығушылығы, мақсаты немесе қысқаша таныстыруы…" data-char-count maxlength="500"></textarea>
+        <div class="textarea-meta"><span asp-validation-for="Bio" class="field-error"></span><small><span data-char-current>0</span>/500</small></div>
+    </div>
+    <div class="field-group field-wide">
+        <label class="status-toggle" for="IsActive">
+            <span class="toggle-copy"><strong>Белсенді профиль</strong><small>Бұл профиль тізімде белсенді деп көрсетіледі.</small></span>
+            <span class="form-check form-switch"><input asp-for="IsActive" class="form-check-input" role="switch" /></span>
+        </label>
+        <span asp-validation-for="IsActive" class="field-error"></span>
+    </div>
+</div>

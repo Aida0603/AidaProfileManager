@@ -1,0 +1,85 @@
+@model AidaProfileManager.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Басқару тақтасы";
+    var activePercent = Model.TotalProfiles == 0 ? 0 : (int)Math.Round(Model.ActiveProfiles * 100d / Model.TotalProfiles);
+}
+<section class="welcome-row">
+    <div>
+        <div class="eyebrow"><span class="eyebrow-sparkle">✦</span> ҚОШ КЕЛДІҢІЗ</div>
+        <h1>Сәлем, Aida <span class="wave">✦</span></h1>
+        <p class="page-lead">Профильдеріңізге шолу жасап, бәрін бір жерден басқарыңыз.</p>
+    </div>
+    <a class="btn btn-primary-soft" asp-controller="Profiles" asp-action="Create">@await Html.PartialAsync("_Icon", "plus") <span>Профиль қосу</span></a>
+</section>
+
+<section class="stats-grid" aria-label="Профиль статистикасы">
+    <article class="stat-card stat-lilac">
+        <div class="stat-top"><span class="stat-label">Барлық профиль</span><span class="stat-icon">@await Html.PartialAsync("_Icon", "people")</span></div>
+        <div class="stat-value">@Model.TotalProfiles</div>
+        <div class="stat-foot"><span class="stat-dot lilac-dot"></span>Тіркелген пайдаланушы</div>
+    </article>
+    <article class="stat-card stat-pink">
+        <div class="stat-top"><span class="stat-label">Белсенді</span><span class="stat-icon">@await Html.PartialAsync("_Icon", "check-circle")</span></div>
+        <div class="stat-value">@Model.ActiveProfiles</div>
+        <div class="stat-foot"><span class="stat-dot green-dot"></span>Қолданыстағы профиль</div>
+    </article>
+    <article class="stat-card stat-blue">
+        <div class="stat-top"><span class="stat-label">Белсенді емес</span><span class="stat-icon">@await Html.PartialAsync("_Icon", "clock")</span></div>
+        <div class="stat-value">@Model.InactiveProfiles</div>
+        <div class="stat-foot"><span class="stat-dot gray-dot"></span>Уақытша тоқтатылған</div>
+    </article>
+    <article class="stat-card stat-mint">
+        <div class="stat-top"><span class="stat-label">Белсенділік үлесі</span><span class="stat-icon">@await Html.PartialAsync("_Icon", "sparkle")</span></div>
+        <div class="stat-value">@activePercent<span class="stat-percent">%</span></div>
+        <div class="stat-foot"><span class="stat-dot green-dot"></span>Жалпы профиль санынан</div>
+    </article>
+</section>
+
+<div class="dashboard-grid">
+    <section class="panel recent-panel">
+        <div class="panel-heading">
+            <div><span class="section-kicker">СОҢҒЫ ЖАҢАРТУ</span><h2>Соңғы профильдер</h2></div>
+            <a class="text-link" asp-controller="Profiles" asp-action="Index">Барлығын көру @await Html.PartialAsync("_Icon", "arrow-right")</a>
+        </div>
+        @if (Model.RecentProfiles.Count == 0)
+        {
+            <div class="empty-state compact-empty">
+                <div class="empty-illustration"><span class="empty-avatar">A</span><span class="empty-sparkle">✦</span></div>
+                <h3>Әзірге профиль жоқ</h3>
+                <p>Алғашқы профильді тіркеп, жұмысты бастаңыз.</p>
+                <a class="btn btn-primary-soft" asp-controller="Profiles" asp-action="Create">@await Html.PartialAsync("_Icon", "plus") Профиль қосу</a>
+            </div>
+        }
+        else
+        {
+            <div class="recent-list">
+                @foreach (var profile in Model.RecentProfiles)
+                {
+                    <a class="recent-item" asp-controller="Profiles" asp-action="Details" asp-route-id="@profile.Id">
+                        <span class="profile-avatar avatar-tone-@((profile.Id % 4) + 1)">@profile.FullName.Trim().FirstOrDefault()</span>
+                        <span class="recent-person"><strong>@profile.FullName</strong><small>@@@profile.Username</small></span>
+                        <span class="recent-email">@profile.Email</span>
+                        <span class="status-pill @(profile.IsActive ? "is-active" : "is-inactive")"><i></i>@(profile.IsActive ? "Белсенді" : "Белсенді емес")</span>
+                        <span class="recent-date">@profile.CreatedAtUtc.ToLocalTime().ToString("dd.MM.yyyy")</span>
+                    </a>
+                }
+            </div>
+        }
+    </section>
+    <aside class="panel guide-card">
+        <div class="guide-art"><div class="guide-art-circle circle-one"></div><div class="guide-art-circle circle-two"></div><span class="guide-sparkle sparkle-one">✦</span><span class="guide-sparkle sparkle-two">✧</span><div class="guide-shield">@await Html.PartialAsync("_Icon", "shield-check")</div></div>
+        <span class="section-kicker">ҚАУІПСІЗДІК ЖӘНЕ САПА</span>
+        <h2>Деректеріңіз<br />тәртіпте болсын</h2>
+        <p>Құпиясөзді тексеру, қате мәндерді табу және валидацияның жұмысын көру.</p>
+        <a class="guide-link" asp-controller="Profiles" asp-action="ValidationGuide">Нұсқаулықты ашу @await Html.PartialAsync("_Icon", "arrow-up-right")</a>
+        <div class="guide-bottom"><span>@await Html.PartialAsync("_Icon", "check-circle")</span> Сервер және браузер тексерісі</div>
+    </aside>
+</div>
+
+<section class="quick-actions">
+    <div><span class="section-kicker">ЖЫЛДАМ ӨТУ</span><h2>Келесі қадамыңызды таңдаңыз</h2></div>
+    <div class="quick-action-links">
+        <a asp-controller="Profiles" asp-action="Index"><span class="quick-icon lavender-icon">@await Html.PartialAsync("_Icon", "people")</span><span><strong>Профильдер тізімі</strong><small>Барлық жазбаны шолу</small></span>@await Html.PartialAsync("_Icon", "arrow-right")</a>
+        <a asp-controller="Profiles" asp-action="ValidationGuide"><span class="quick-icon pink-icon">@await Html.PartialAsync("_Icon", "shield-check")</span><span><strong>Валидация зертханасы</strong><small>Енгізілген деректі тексеру</small></span>@await Html.PartialAsync("_Icon", "arrow-right")</a>
+    </div>
+</section>

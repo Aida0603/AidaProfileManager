@@ -1,0 +1,6 @@
+@model AidaProfileManager.ViewModels.ProfileDetailsViewModel
+@{
+    ViewData["Title"] = "Профильді жою";
+}
+<div class="form-page-heading"><a class="back-link" asp-action="Details" asp-route-id="@Model.Id">← Профильге оралу</a><div class="eyebrow">ӘРЕКЕТТІ РАСТАУ</div><h1>Профильді жою</h1></div>
+<section class="panel delete-confirm-panel"><div class="modal-icon danger-modal-icon">@await Html.PartialAsync("_Icon", "trash")</div><h2>«@Model.FullName» профилін жоясыз ба?</h2><p>Бұл профильдің деректері SQLite дерекқорынан біржола өшіріледі. Бұл әрекетті кейін қайтару мүмкін емес.</p><form asp-action="Delete" method="post"><input type="hidden" name="id" value="@Model.Id" /><div class="form-actions centered-actions"><a class="btn btn-quiet" asp-action="Details" asp-route-id="@Model.Id">Бас тарту</a><button class="btn btn-danger-soft" type="submit" data-loading-button>@await Html.PartialAsync("_Icon", "trash") Иә, жою</button></div></form></section>

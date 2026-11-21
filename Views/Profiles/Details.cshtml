@@ -1,0 +1,15 @@
+@model AidaProfileManager.ViewModels.ProfileDetailsViewModel
+@{
+    ViewData["Title"] = "Профиль ақпараты";
+    var initial = Model.FullName.Trim().FirstOrDefault();
+}
+<div class="details-heading"><div><a class="back-link" asp-action="Index">← Профильдер тізіміне оралу</a><div class="eyebrow">ПАЙДАЛАНУШЫ ПРОФИЛІ</div></div><div class="heading-actions"><a class="btn btn-quiet" asp-action="Edit" asp-route-id="@Model.Id">@await Html.PartialAsync("_Icon", "pencil") Өңдеу</a><a class="btn btn-danger-outline" asp-action="Delete" asp-route-id="@Model.Id">@await Html.PartialAsync("_Icon", "trash") Жою</a></div></div>
+<section class="panel profile-hero-card">
+    <div class="detail-avatar avatar-tone-@((Model.Id % 4) + 1)">@initial</div>
+    <div class="detail-identity"><div class="detail-name-row"><h1>@Model.FullName</h1><span class="status-pill @(Model.IsActive ? "is-active" : "is-inactive")"><i></i>@(Model.IsActive ? "Белсенді" : "Белсенді емес")</span></div><div class="detail-username">@@@Model.Username</div><div class="detail-meta"><span>@await Html.PartialAsync("_Icon", "clock") @Model.CreatedAtUtc.ToLocalTime().ToString("dd MMMM yyyy") күні тіркелген</span>@if (Model.UpdatedAtUtc.HasValue) { <span>·</span><span>Соңғы жаңарту: @Model.UpdatedAtUtc.Value.ToLocalTime().ToString("dd.MM.yyyy")</span> }</div></div>
+    <div class="profile-id">ID <strong>#@Model.Id.ToString("D4")</strong></div>
+</section>
+<div class="detail-grid">
+    <section class="panel detail-panel"><div class="panel-heading"><div><span class="section-kicker">ЖЕКЕ ДЕРЕКТЕР</span><h2>Байланыс ақпараты</h2></div><span class="detail-panel-icon">@await Html.PartialAsync("_Icon", "people")</span></div><div class="detail-list"><div><span>Электрондық пошта</span><strong><a href="mailto:@Model.Email">@Model.Email</a></strong></div><div><span>Телефон нөмірі</span><strong>@Model.PhoneNumber</strong></div><div><span>Жасы</span><strong>@Model.Age жас</strong></div><div><span>Жынысы</span><strong>@Model.Gender</strong></div></div></section>
+    <section class="panel detail-panel"><div class="panel-heading"><div><span class="section-kicker">ҚЫСҚАША АҚПАРАТ</span><h2>Өзі туралы</h2></div><span class="detail-panel-icon pink-icon">@await Html.PartialAsync("_Icon", "sparkle")</span></div>@if (string.IsNullOrWhiteSpace(Model.Bio)) { <p class="muted-copy">Бұл пайдаланушы өзі туралы ақпарат қоспаған.</p> } else { <p class="bio-copy">@Model.Bio</p> }</section>
+</div>

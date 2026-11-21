@@ -1,0 +1,64 @@
+@model AidaProfileManager.ViewModels.ProfileIndexViewModel
+@{
+    ViewData["Title"] = "Профильдер";
+}
+<section class="page-heading-row">
+    <div><div class="eyebrow">ДЕРЕКТЕР ҚОРЫ</div><h1>Профильдер <span class="heading-count">@Model.TotalCount</span></h1><p class="page-lead">Тіркелген пайдаланушыларды іздеп, реттеңіз.</p></div>
+    <a class="btn btn-primary-soft" asp-action="Create">@await Html.PartialAsync("_Icon", "plus") Жаңа профиль</a>
+</section>
+<section class="panel directory-panel">
+    <form asp-action="Index" method="get" class="filter-bar">
+        <div class="search-box"><span>@await Html.PartialAsync("_Icon", "search")</span><input name="search" value="@Model.Search" placeholder="Аты, username немесе email…" aria-label="Профиль іздеу" /><button type="submit" aria-label="Іздеу">Іздеу</button></div>
+        <label class="filter-select"><span>Күйі</span><select name="status" onchange="this.form.submit()"><option value="" selected="@(string.IsNullOrEmpty(Model.Status))">Барлығы</option><option value="active" selected="@(Model.Status == "active")">Белсенді</option><option value="inactive" selected="@(Model.Status == "inactive")">Белсенді емес</option></select></label>
+        @if (!string.IsNullOrWhiteSpace(Model.Search) || !string.IsNullOrWhiteSpace(Model.Status))
+        {
+            <a class="clear-filter" asp-action="Index">Тазарту</a>
+        }
+    </form>
+    @if (Model.Profiles.Count == 0)
+    {
+        <div class="empty-state directory-empty">
+            <div class="empty-illustration"><span class="empty-avatar">@await Html.PartialAsync("_Icon", "search")</span><span class="empty-sparkle">✦</span></div>
+            <h2>@(Model.TotalCount == 0 ? "Бірінші профильді тіркеңіз" : "Сәйкес профиль табылмады")</h2>
+            <p>@(Model.TotalCount == 0 ? "Қазір тізім бос. Жаңа профиль бірнеше сәтте дайын болады." : "Іздеу сөзін өзгертіп немесе сүзгіні тазалап көріңіз.")</p>
+            @if (Model.TotalCount == 0)
+            {
+                <a class="btn btn-primary-soft" asp-action="Create">@await Html.PartialAsync("_Icon", "plus") Жаңа профиль</a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table profile-table">
+                <thead><tr><th>ПАЙДАЛАНУШЫ</th><th>БАЙЛАНЫС</th><th>ЖАС / ЖЫНЫС</th><th>КҮЙІ</th><th>ТІРКЕЛГЕН</th><th><span class="visually-hidden">Әрекеттер</span></th></tr></thead>
+                <tbody>
+                @foreach (var profile in Model.Profiles)
+                {
+                    <tr>
+                        <td><div class="table-person"><span class="profile-avatar avatar-tone-@((profile.Id % 4) + 1)">@profile.FullName.Trim().FirstOrDefault()</span><span><strong>@profile.FullName</strong><small>@@@profile.Username</small></span></div></td>
+                        <td><span class="table-email">@profile.Email</span></td>
+                        <td><span class="table-meta">@profile.Age жас</span><small class="table-submeta">@profile.Gender</small></td>
+                        <td><span class="status-pill @(profile.IsActive ? "is-active" : "is-inactive")"><i></i>@(profile.IsActive ? "Белсенді" : "Белсенді емес")</span></td>
+                        <td><span class="table-date">@profile.CreatedAtUtc.ToLocalTime().ToString("dd.MM.yyyy")</span></td>
+                        <td><div class="row-actions"><a asp-action="Details" asp-route-id="@profile.Id" class="row-action" title="Толық ақпарат" aria-label="@profile.FullName толық ақпараты">@await Html.PartialAsync("_Icon", "eye")</a><a asp-action="Edit" asp-route-id="@profile.Id" class="row-action" title="Өңдеу" aria-label="@profile.FullName өңдеу">@await Html.PartialAsync("_Icon", "pencil")</a><button type="button" class="row-action danger-action" title="Жою" aria-label="@profile.FullName жою" data-bs-toggle="modal" data-bs-target="#deleteModal" data-delete-id="@profile.Id" data-delete-name="@profile.FullName">@await Html.PartialAsync("_Icon", "trash")</button></div></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        <div class="table-footer"><span>Көрсетілді: <strong>@Model.Profiles.Count</strong> профиль</span><span>Барлық дерек SQLite қорынан алынды</span></div>
+    }
+</section>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm"><div class="modal-content app-modal">
+        <div class="modal-icon danger-modal-icon">@await Html.PartialAsync("_Icon", "trash")</div>
+        <h2 id="deleteModalLabel">Профильді жоясыз ба?</h2>
+        <p><strong data-delete-name>Профиль</strong> деректері біржола өшіріледі. Бұл әрекетті қайтару мүмкін емес.</p>
+        <form asp-action="Delete" method="post" data-delete-form>
+            <input type="hidden" name="id" value="" data-delete-id-input />
+            <div class="modal-actions"><button type="button" class="btn btn-quiet" data-bs-dismiss="modal">Бас тарту</button><button type="submit" class="btn btn-danger-soft" data-loading-button>@await Html.PartialAsync("_Icon", "trash") Жою</button></div>
+        </form>
+    </div></div>
+</div>
