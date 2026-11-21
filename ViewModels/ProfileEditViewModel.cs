@@ -24,9 +24,10 @@ public sealed class ProfileEditViewModel : IValidatableObject
     [Display(Name = "Электрондық пошта")]
     public string Email { get; set; } = string.Empty;
 
+    [Required(ErrorMessage = "Жасын енгізіңіз.")]
     [Range(16, 100, ErrorMessage = "Жас 16 мен 100 аралығында болуы керек.")]
     [Display(Name = "Жасы")]
-    public int Age { get; set; }
+    public int? Age { get; set; }
 
     [Required(ErrorMessage = "Телефон нөмірін енгізіңіз.")]
     [RegularExpression("^(?=(?:.*\\d){10,15}$)\\+?[0-9()\\-\\s]{10,24}$", ErrorMessage = "Телефон нөмірінің пішімі дұрыс емес.")]
@@ -63,7 +64,7 @@ public sealed class ProfileEditViewModel : IValidatableObject
             yield return new ValidationResult("Жаңа құпиясөзді растаңыз.", [nameof(ConfirmPassword)]);
         }
 
-        if (Age < 18 && (string.IsNullOrWhiteSpace(Bio) || Bio.Trim().Length < 20))
+        if (Age.HasValue && Age.Value < 18 && (string.IsNullOrWhiteSpace(Bio) || Bio.Trim().Length < 20))
         {
             yield return new ValidationResult(
                 "18 жасқа толмаған пайдаланушы өзі туралы кемінде 20 таңба жазуы керек.",

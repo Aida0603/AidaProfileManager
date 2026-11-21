@@ -52,6 +52,12 @@ dotnet run
 dotnet tool install --global dotnet-ef --version 10.0.15
 ```
 
+Егер `dotnet-ef` бұрыннан орнатылған болса, оның нұсқасын жаңартыңыз:
+
+```powershell
+dotnet tool update --global dotnet-ef --version 10.0.15
+```
+
 Жоба алғаш іске қосылғанда миграциялар автоматты түрде қолданылады. SQLite файлы `App_Data/aida-profiles.db` ішінде жасалады. `App_Data/` қалтасы мен дерекқор файлдары Git-ке қосылмайды.
 
 Құрылымды тексеру:

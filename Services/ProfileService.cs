@@ -98,7 +98,7 @@ public sealed class ProfileService(
             NormalizedUsername = Normalize(model.Username),
             Email = model.Email.Trim(),
             NormalizedEmail = Normalize(model.Email),
-            Age = model.Age,
+            Age = model.Age!.Value,
             PhoneNumber = model.PhoneNumber.Trim(),
             Gender = model.Gender,
             Bio = CleanBio(model.Bio),
@@ -117,7 +117,7 @@ public sealed class ProfileService(
         profile.NormalizedUsername = Normalize(model.Username);
         profile.Email = model.Email.Trim();
         profile.NormalizedEmail = Normalize(model.Email);
-        profile.Age = model.Age;
+        profile.Age = model.Age!.Value;
         profile.PhoneNumber = model.PhoneNumber.Trim();
         profile.Gender = model.Gender;
         profile.Bio = CleanBio(model.Bio);
